@@ -22,41 +22,41 @@ npm install
 ## Configuration
 Most of the configurations can be found inside `config.js`:
 
-#### csgoExecPath
+#### `csgoExecPath`
 Path to CS:GO executable
 
-#### csgoDemoPath
+#### `csgoDemoPath`
 Path to store downloaded demos. Recommended to store inside the same path as the executable so `playdemo` can be shorter.
 
-#### csgoRecordPath
+#### `csgoRecordPath`
 Where HLAE raw recordings should be stored (expect large files).
 
-#### csgoRecordingsPath
+#### `csgoRecordingsPath`
 Where ffmpeg should store transcoded recordings.
 
-#### hlaeExecPath
+#### `hlaeExecPath`
 Path to HLAE executable.
 
-#### api
+#### `api`
 CallAdmin-Middleware API prefix
 
-#### csgoRequiredCommands
+#### `csgoRequiredCommands`
 Should not be changed since they are needed for each recording.
 
-#### csgoOptionalCommands
+#### `csgoOptionalCommands`
 Optional commands (anything that's valid inside CS:GO and HLAE).
 
-#### csgoOptionalCommandsTick
+#### `csgoOptionalCommandsTick`
 What tick optional commands will run.
 
-#### csgoRequiredCommandsTick
+#### `csgoRequiredCommandsTick`
 What tick required commands will run.
 
-#### csgoStartRecordingTick
+#### `csgoStartRecordingTick`
 What tick the recording will start.
 
-#### csgoWarmupTicks
+#### `csgoWarmupTicks`
 How many ticks should be waited before running commands.
 
-#### csgoDurationTicks
+#### `csgoDurationTicks`
 DEPRECATED
