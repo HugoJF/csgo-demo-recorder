@@ -11,12 +11,12 @@ const request = require('request');
 const fs = require('fs');
 const {findLatestModifiedFile, secondsToHumans, wavExtension} = require('./utils');
 const {start, update, stop} = require('./huds/download-hud');
-// const {upload, boot} = require('./youtube');
 const rimraf = require('rimraf');
+const {prepare, uploadFile, fileExists} = require('./minio');
 
 const started = (new Date()).getTime();
-
 const buildDemoPath = (id) => (config.csgoDemoPath + id + '.dem');
+
 
 async function processDemo(demo) {
     let {id, demoUrl} = demo;
@@ -28,6 +28,9 @@ async function processDemo(demo) {
 
     // Check if path exists
     dependencies.checkDemo(demoPath);
+
+    // Upload to bucket
+    uploadFile(`${id}.dem`, demoPath, 'demos');
 
     // Parse demo header
     let data = await analyser.analyse(demoPath);
@@ -80,9 +83,7 @@ async function processDemo(demo) {
     console.log('Transcoding finished!');
     console.log(`Demo processing took ${min} minutes and ${sec} seconds.`);
 
-    // let videoData = await upload(fs.createReadStream(transcoder.transcodedPath(demo.id)), demo.id.toString());
-    //
-    // console.log('Upload details', videoData);
+    uploadFile(`${demo.id}.mp4`, transcoder.transcodedPath(demo.id), 'video');
 }
 
 function downloadDemo(demo) {
@@ -114,25 +115,8 @@ function downloadDemo(demo) {
     })
 }
 
-
-let ignoreIds = [
-    1078,
-    1079,
-    1080,
-    1081,
-    1082,
-    1083,
-    1084,
-    1085,
-    1086,
-    1087,
-    1088
-];
-
 async function run() {
-    // console.log('Waiting for youtube login');
-    // await boot();
-    // console.log('Youtube logged, processing demos...');
+    await prepare();
 
     let demos = await api.fetchDemos();
     console.log(`API returned ${demos.length} demos`);
@@ -140,19 +124,24 @@ async function run() {
     console.log(`Found ${demos.length} demos to process!`);
     let uploads = 0;
 
-    for (let i = 0; i < demos.length && uploads < 6;  i++) {
+    for (let i = 0; i < demos.length; i++) {
         let demo = demos[i];
 
-        if (ignoreIds.includes(demo.id)) {
-            console.log(`Ignoring demo ${demo.id}`);
+        try {
+            await fileExists(`${demo.id}.mp4`, 'video');
+
+            console.log(`Already found a demo recorded, ignoring ID ${demo.id}`);
+
             continue;
+        } catch (e) {
+            console.log(`MinIO reported video not found for demo ${demo.id}`);
         }
 
         console.log(`Processing demo ${demo.id}...`);
 
         try {
             await processDemo(demo);
-            // uploads++;
+            uploads++;
         } catch (e) {
             console.log('Error processing demo', e);
         }
@@ -161,5 +150,6 @@ async function run() {
         console.log(`Currently uploaded ${uploads}/6`);
     }
 }
+
 
 run();

@@ -4,7 +4,7 @@ module.exports = {
     csgoDemoPath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo\\",
     csgoRecordPath: "Z:\\CSGO_Recordings\\raw\\",
     csgoRecordingsPath: "Z:\\CSGO_Recordings\\transcoded\\",
-    hlaeExecPath: "C:\\Users\\Hugo\\AppData\\Local\\AkiVer\\hlae\\HLAE.exe",
+    hlaeExecPath: "C:\\Program Files (x86)\\HLAE\\HLAE.exe",
     api: 'http://calladmin-middleware.denerdtv.com/api/v1/',
 
     csgoRequiredCommands: [
