@@ -18,7 +18,7 @@ const transcode = (options) => {
                 res();
             })
             .on('stderr', function (stderrLine) {
-                console.log('Stderr output: ' + stderrLine);
+                // console.log('Stderr output: ' + stderrLine);
             })
             .run();
     });
