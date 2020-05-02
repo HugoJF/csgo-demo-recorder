@@ -23,9 +23,7 @@
         "log-update": "^4.0.0",
         "minio": "^7.0.16",
         "node-multispinner": "HugoJF/node-multispinner#master",
-        "opn": "^6.0.0",
         "pretty-error": "2.2.0-rc.1",
-        "rcon": "^1.0.3",
         "rimraf": "^2.7.1"
     },
     "devDependencies": {
