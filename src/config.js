@@ -33,4 +33,14 @@ module.exports = {
     csgoStartRecordingTick: 192,
     csgoWarmupTicks: 1024,
     csgoDurationTicks: 640,
+
+    getOptions: {
+        headers: {
+            Accept: 'application/json',
+        }
+    },
+    postOptions: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+    },
 };

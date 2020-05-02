@@ -1,4 +1,3 @@
-const math = require('mathjs');
 const _cliProgress = require('cli-progress');
 
 let bar = undefined;
@@ -8,11 +7,11 @@ const start = (id, length) => {
         format: `Downloading demo ${id} [{bar}] {percentage}% | ETA: {eta}s | {value}MB / {total}MB`
     }, _cliProgress.Presets.shades_classic);
 
-    bar.start(math.round(length / 1024 / 1024, 3), 0);
+    bar.start(Math.round(length / 1024 / 1024), 0);
 };
 
 const update = (totalDownloaded) => {
-    bar.update(math.round(totalDownloaded / 1024 / 1024, 3));
+    bar.update(Math.round(totalDownloaded / 1024 / 1024));
 };
 
 const stop = () => {

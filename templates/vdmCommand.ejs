@@ -1,0 +1,11 @@
+demoactions
+{
+<% Object.entries(commands).forEach(([tick, command]) => { -%>
+    "<%- tick %>"
+    {
+<% Object.entries(command).forEach(([key, value]) => { -%>
+        <%- key %> "<%- value %>"
+<% }) -%>
+    }
+<% }) -%>
+}
