@@ -1,16 +1,16 @@
 {
-    "name": "rest-rcon",
+    "name": "csgo-demo-recorder",
     "version": "1.0.0",
-    "description": "",
     "main": "src/index.js",
     "scripts": {
-        "dev": "npm run babel && npm run start",
+        "dev-start": "npm run dev && npm run start",
+        "dev": "npm run dev",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "start": "node -r dotenv/config build/index.js",
-        "watch": "nodemon src/index.js"
+        "prod-start": "npm run prod && npm run start",
+        "prod": "npm run prod",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "start": "node -r dotenv/config build/index.js"
     },
-    "author": "",
-    "license": "ISC",
     "dependencies": {
         "axios": "^0.19.2",
         "chalk": "^4.0.0",
