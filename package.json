@@ -3,13 +3,14 @@
     "version": "1.0.0",
     "main": "src/index.js",
     "scripts": {
-        "dev-start": "npm run dev && npm run start",
-        "dev": "npm run dev",
+        "dev-start": "npm run dev && npm run debug",
+        "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod-start": "npm run prod && npm run start",
         "prod": "npm run prod",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "start": "node -r dotenv/config build/index.js"
+        "start": "node -r dotenv/config build/index.js",
+        "debug": "node --trace-warnings -r dotenv/config build/index.js"
     },
     "dependencies": {
         "axios": "^0.19.2",

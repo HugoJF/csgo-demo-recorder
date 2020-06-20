@@ -34,6 +34,7 @@ pe.appendStyle({
 });
 
 let progress;
+
 const spinnerConfiguration = {
     download_demo: 'Download demo',
     upload_demo: 'Upload demo',
@@ -59,9 +60,13 @@ async function processDemo(demo) {
 
     // Upload to bucket
     log(`Uploading file to Minio`);
-    minio.uploadFile(`${demoId}.dem`, demoPath, 'demos').then(() =>{
+    try {
+        await minio.uploadFile(`${demoId}.dem`, demoPath, 'demos');
+
         progress.success('upload_demo');
-    });
+    } catch (e) {
+        error('Error uploading .dem to Minio', e);
+    }
 
     // Parse demo header
     log(`Started demo analysis`);
@@ -69,9 +74,14 @@ async function processDemo(demo) {
     progress.success('analyse_demo');
 
     // Upload metadata
-    metaUploader.uploadPlayerData(demoId, demoData.playerData);
-    metaUploader.uploadChatData(demoId, demoData.chat);
-    progress.success('metadata');
+    const playerData = metaUploader.uploadPlayerData(demoId, demoData.playerData)
+        .catch(e => error('Error uploading player data to Calladmin', e));
+
+    const chatData = metaUploader.uploadChatData(demoId, demoData.chat)
+        .catch(e => error('Error uploading chat data to Calladmin', e));
+
+    Promise.all([playerData, chatData])
+        .then(() => progress.success('metadata'));
 
     // Debug
     let {min, sec} = utils.secondsToHumans(demoData.ticks / demoData.tickRate);
@@ -122,7 +132,7 @@ async function processDemo(demo) {
 }
 
 async function downloadDemo(demo) {
-    let {id, demoUrl} = demo;
+    let {id, legacyDemoUrl} = demo;
     let demoPath = paths.demoPath(id);
 
     function handleDownloadProgress(progress) {
@@ -135,7 +145,7 @@ async function downloadDemo(demo) {
         downloadHud.update(progress.loaded);
     }
 
-    const request = await axios.get(demoUrl, {
+    const request = await axios.get(legacyDemoUrl, {
         responseType: 'stream',
         onDownloadProgress: handleDownloadProgress
     });

@@ -5,7 +5,7 @@ module.exports = {
     csgoRecordPath: "Z:\\CSGO_Recordings\\raw\\",
     csgoRecordingsPath: "Z:\\CSGO_Recordings\\transcoded\\",
     hlaeExecPath: "C:\\Program Files (x86)\\HLAE\\HLAE.exe",
-    api: 'http://calladmin-middleware.denerdtv.com/api/v1/',
+    api: 'https://calladmin-middleware.denerdtv.com/api/v1/',
 
     csgoRequiredCommands: [
         "sv_cheats 1",

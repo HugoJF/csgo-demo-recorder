@@ -1,18 +1,18 @@
-import {cleanMessage} from "./utils";
 import axios from 'axios';
 import {api} from "./config";
+import {cleanMessage} from "./utils";
 import * as logger from "./logger";
 
 const [log, error] = logger.build('META_UPLOADER');
 
 async function post(url, body) {
-    let response = await axios.post(url, body, {
-        headers: {
-            Accept: 'application/json',
-        }
-    });
+    log('Sending POST to ', url);
+
+    let response = await axios.post(url, body);
 
     log(`Post request to ${url} responded with status code ${response.status}: ${response.data}`);
+
+    return response;
 }
 
 export const uploadPlayerData = (id, playerData) => {
@@ -22,7 +22,7 @@ export const uploadPlayerData = (id, playerData) => {
         return {name, steamid: guid};
     });
 
-    post(`${api}reports/${id}/player-data`, data);
+    return post(`${api}reports/${id}/player-data`, data);
 };
 
 export const uploadChatData = (id, chat) => {
@@ -32,5 +32,5 @@ export const uploadChatData = (id, chat) => {
         return {steamid, message: cleanMessage(msgName)};
     });
 
-    post(`${api}reports/${id}/chat`, data);
+    return post(`${api}reports/${id}/chat`, data);
 };

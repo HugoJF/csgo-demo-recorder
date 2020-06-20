@@ -14,7 +14,7 @@ let nodeExternals = require('webpack-node-externals');
 
 mix
     .js('src/index.js', 'build/')
-    .js('src/test.js', 'build/')
+    // .js('src/test.js', 'build/')
     .webpackConfig({
         target: 'node',
         externals: [nodeExternals()]

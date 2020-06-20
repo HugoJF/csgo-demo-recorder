@@ -73,14 +73,24 @@ class Analyser {
     }
 
     onEnd() {
-        let playerData = this.demo.stringTables
-            .findTableByName("userinfo").entries
-            .filter(e => e.userData)
-            .filter(e => !e.userData.fakePlayer)
-            .filter(e => !e.userData.isHltv);
+        let playerData;
+
+        try {
+            playerData = this.demo.stringTables
+                .findTableByName("userinfo").entries
+                .filter(e => e.userData)
+                .filter(e => !e.userData.fakePlayer)
+                .filter(e => !e.userData.isHltv);
+        } catch (e) {
+            this.reject(e);
+
+            return;
+        }
 
         if (!this.resolve) {
             throw new Error('Demo analyser ended but there is no promise to resolve!');
+
+            return;
         }
 
         this.resolve({
