@@ -1,7 +1,5 @@
 import fs from 'fs';
 import axios from 'axios';
-import _ from 'lodash';
-import Multispinner from 'node-multispinner';
 import rimraf from 'rimraf';
 import PrettyError from "pretty-error";
 import * as analyser from './analyser';
@@ -33,8 +31,6 @@ pe.appendStyle({
     }
 });
 
-let progress;
-
 const spinnerConfiguration = {
     download_demo: 'Download demo',
     upload_demo: 'Upload demo',
@@ -48,7 +44,6 @@ const spinnerConfiguration = {
 };
 
 async function processDemo(demo) {
-    progress = new Multispinner(spinnerConfiguration, {});
     const started = Date.now();
     const {id: demoId, demoUrl} = demo;
     const demoPath = paths.demoPath(demoId);
@@ -56,14 +51,11 @@ async function processDemo(demo) {
     // Fetch demo
     log(`Fetching demo at ${demoUrl}`);
     await downloadDemo(demo);
-    progress.success('download_demo');
 
     // Upload to bucket
     log(`Uploading file to Minio`);
     try {
         await minio.uploadFile(`${demoId}.dem`, demoPath, 'demos');
-
-        progress.success('upload_demo');
     } catch (e) {
         error('Error uploading .dem to Minio', e);
     }
@@ -71,17 +63,13 @@ async function processDemo(demo) {
     // Parse demo header
     log(`Started demo analysis`);
     const demoData = await analyser.analyse(demoPath);
-    progress.success('analyse_demo');
 
     // Upload metadata
-    const playerData = metaUploader.uploadPlayerData(demoId, demoData.playerData)
+    metaUploader.uploadPlayerData(demoId, demoData.playerData)
         .catch(e => error('Error uploading player data to Calladmin', e));
 
-    const chatData = metaUploader.uploadChatData(demoId, demoData.chat)
+    metaUploader.uploadChatData(demoId, demoData.chat)
         .catch(e => error('Error uploading chat data to Calladmin', e));
-
-    Promise.all([playerData, chatData])
-        .then(() => progress.success('metadata'));
 
     // Debug
     let {min, sec} = utils.secondsToHumans(demoData.ticks / demoData.tickRate);
@@ -90,12 +78,10 @@ async function processDemo(demo) {
     // Build .vdm for demo
     log('Building demo VDM');
     await vdmBuilder.build(demo, demoData);
-    progress.success('build_vdm');
 
     // Record demo to .mp4
     log('Starting recorder...');
     await recorder.record(demoPath, demoData);
-    progress.success('record_demo');
 
     // Find latest takeNNNN folder generated
     let takeNumber = await utils.findLatestModifiedFile(paths.csgoRawRecordingsPath());
@@ -112,12 +98,10 @@ async function processDemo(demo) {
         videoPath: `${recordingPath}\\defaultNormal\\video.mp4`,
         audioPath: `${recordingPath}\\${audioFile}`,
     });
-    progress.success('transcode_render');
 
     rimraf(paths.csgoRawRecordingsPath(), () => {
         log('Raw files deleted');
     });
-    progress.success('cleanup');
 
     const finished = Date.now();
     let renderTime = utils.secondsToHumans((finished - started) / 1000);
@@ -126,9 +110,7 @@ async function processDemo(demo) {
     log(`Demo processing took ${renderTime.min} minutes and ${renderTime.sec} seconds.`);
 
     // WTF is dis
-    minio.uploadFile(`${demo.id}.mp4`, paths.transcodedPath(demo.id), 'video').then(() => {
-        progress.success('upload_render');
-    });
+    minio.uploadFile(`${demo.id}.mp4`, paths.transcodedPath(demo.id), 'video');
 }
 
 async function downloadDemo(demo) {
