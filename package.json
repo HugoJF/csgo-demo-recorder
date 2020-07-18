@@ -20,7 +20,7 @@
         "dotenv": "^8.2.0",
         "ejs": "^3.1.2",
         "fluent-ffmpeg": "^2.1.2",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
         "log-update": "^4.0.0",
         "minio": "^7.0.16",
         "pretty-error": "2.2.0-rc.1",
