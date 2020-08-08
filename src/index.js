@@ -14,6 +14,8 @@ import * as utils from './utils';
 import * as downloadHud from './huds/download-hud';
 import * as logger from './logger';
 import sleep from './sleep';
+import {csgoRawRecordingsPath} from "./paths";
+import {csgoMapPath} from "./paths";
 
 const [log, error] = logger.build('MAIN');
 const pe = new PrettyError();
@@ -62,6 +64,10 @@ async function processDemo(demo) {
     log(`Started demo analysis`);
     const demoData = await analyser.analyse(demoPath);
 
+    // Check if map exists
+    log(`Checking if map ${demoData.map} exists`);
+    await fs.promises.stat(`${csgoMapPath(demoData.map)}`);
+
     // Upload metadata
     metaUploader.uploadPlayerData(demoId, demoData.playerData)
         .catch(e => error('Error uploading player data to Calladmin', e));
@@ -72,6 +78,8 @@ async function processDemo(demo) {
     // Debug
     let {min, sec} = utils.secondsToHumans(demoData.ticks / demoData.tickRate);
     log(`Total demo duration ${min}mins ${sec} seconds`);
+
+
 
     // Build .vdm for demo
     log('Building demo VDM');

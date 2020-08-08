@@ -2,6 +2,7 @@ module.exports = {
     // TODO: move to environment file
     csgoExecPath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo.exe",
     csgoDemoPath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo\\",
+    csgoBasePath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo\\",
     csgoRecordPath: "Z:\\CSGO_Recordings\\raw\\",
     csgoRecordingsPath: "Z:\\CSGO_Recordings\\transcoded\\",
     hlaeExecPath: "C:\\Program Files (x86)\\HLAE\\HLAE.exe",

@@ -35,6 +35,7 @@ class Analyser {
             this.reject('Invalid tick count');
             return;
         }
+
         if (ticks < 3000) {
             this.reject('The demo is too short (<3000 ticks)');
             return;
@@ -43,6 +44,7 @@ class Analyser {
         this.demoInfo = {
             ticks: ticks,
             tickRate: this.demo.tickRate,
+            map: this.demo.header.mapName,
         };
 
         this.demo.cancel();

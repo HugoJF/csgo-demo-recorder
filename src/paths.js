@@ -15,6 +15,10 @@ export function csgoRawRecordingsPath(file = '') {
     return `${config.csgoRecordPath}${file}`;
 }
 
+export function csgoMapPath(map) {
+    return `${config.csgoBasePath}maps\\${map}.bsp`;
+}
+
 export function csgoRecordingsPath() {
     return `${config.csgoRecordingsPath}`;
 }
