@@ -33,7 +33,7 @@ pe.appendStyle({
 
 const spinnerConfiguration = {
     download_demo: 'Download demo',
-    upload_demo: 'Upload demo',
+    // upload_demo: 'Upload demo',
     analyse_demo: 'Analysis',
     metadata: 'Upload metadata',
     build_vdm: 'Build .vdm file',
@@ -48,17 +48,15 @@ async function processDemo(demo) {
     const {id: demoId, demoUrl} = demo;
     const demoPath = paths.demoPath(demoId);
 
-    // Fetch demo
-    log(`Fetching demo at ${demoUrl}`);
     await downloadDemo(demo);
 
     // Upload to bucket
-    log(`Uploading file to Minio`);
-    try {
-        await minio.uploadFile(`${demoId}.dem`, demoPath, 'demos');
-    } catch (e) {
-        error('Error uploading .dem to Minio', e);
-    }
+    // log(`Uploading file to Minio`);
+    // try {
+    //     await minio.uploadFile(`${demoId}.dem`, demoPath, 'demos');
+    // } catch (e) {
+    //     error('Error uploading .dem to Minio', e);
+    // }
 
     // Parse demo header
     log(`Started demo analysis`);
@@ -114,7 +112,7 @@ async function processDemo(demo) {
 }
 
 async function downloadDemo(demo) {
-    let {id, legacyDemoUrl} = demo;
+    let {id} = demo;
     let demoPath = paths.demoPath(id);
 
     function handleDownloadProgress(progress) {
@@ -127,7 +125,11 @@ async function downloadDemo(demo) {
         downloadHud.update(progress.loaded);
     }
 
-    const request = await axios.get(legacyDemoUrl, {
+    let demoUrl = `https://minio.epsilon.denerdtv.com/calladmin/demos/${demo.id}.dem`;
+
+    log(`Fetching demo at ${demoUrl}`);
+
+    const request = await axios.get(demoUrl, {
         responseType: 'stream',
         onDownloadProgress: handleDownloadProgress
     });
@@ -174,7 +176,6 @@ async function run() {
         } catch (e) {
             error('Error while processing demo');
             console.error(pe.render(e));
-            Object.keys(spinnerConfiguration).forEach(progress.error.bind(progress));
             await sleep(5000);
             continue;
         }
