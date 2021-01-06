@@ -13,7 +13,7 @@
         "debug": "node --trace-warnings -r dotenv/config build/index.js"
     },
     "dependencies": {
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "chalk": "^4.0.0",
         "cli-progress": "^2.1.1",
         "demofile": "^1.3.1",
